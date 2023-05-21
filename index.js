@@ -79,9 +79,6 @@ client.on('messageCreate', async (message) => {
 		if (command === `coinflip`) {
 			commandclass.coinflip(message);
 		}
-		if (command === `vc-invite`) {
-			commandclass.invite(message);
-		}
 	}
 )
 
