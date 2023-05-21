@@ -9,4 +9,5 @@ async ping(message,client) {
     cmdCD.addCoolDown(message.author.id, 5000, "cmd-ping");
 }
 }
+
 module.exports = SubCommand;
