@@ -1,5 +1,7 @@
 ﻿const command = require("./command.js")
-const commandclass = new command(); 
+const subcommand = require("./subcommand.js")
+const commandclass = new command();
+const subcommandclass = new subcommand(); 
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 require('dotenv').config();
 const { token } = process.env;
@@ -65,7 +67,7 @@ client.on('messageCreate', async (message) => {
 
 		//ping
 		if (command === `ping`) {
-			commandclass.ping(message,client);
+			subcommandclass.ping(message,client);
 		}
 		//work
 		if (command === `work`) {
@@ -78,9 +80,6 @@ client.on('messageCreate', async (message) => {
 		//coinflip
 		if (command === `coinflip`) {
 			commandclass.coinflip(message);
-		}
-		if (command === `vc-invite`) {
-			commandclass.invite(message);
 		}
 	}
 )

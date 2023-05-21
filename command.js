@@ -1,7 +1,6 @@
 const fs = require("fs")
 const Keyv = require('keyv')
 const cmdCD = require('command-cooldown');
-const { measureMemory } = require("vm");
 
 const prefix = 'c!';
 
@@ -80,14 +79,6 @@ async withdraw(message) {
     moneys.set(message.author.id, money)
 }
 
-async ping(message,client) {
-    let cd = await cmdCD.checkCoolDown(message.author.id, "cmd-ping");
-    if (cd.res.spam) return;
-    if (!cd.res.ready) return message.reply(`${"```"}js\n🤖そのコマンドが使えるまであと ${(cd.res.rem / 1000).toFixed(1)}秒🚀${"```"}`);
-    message.reply(`${"```"}ポン！🏓${client.ws.ping}Ms${"```"}`);
-    cmdCD.addCoolDown(message.author.id, 5000, "cmd-ping");
-}
-
 async work(message) {
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
     let cd = await cmdCD.checkCoolDown(message.author.id, "cmd-work");
@@ -153,13 +144,6 @@ async coinflip(message) {
         );
     }
     moneys.set(message.author.id, money)
-}
-async invite(message) {
-    let cd = await cmdCD.checkCoolDown(message.author.id, "cmd-work");
-    if (cd.res.spam) return;
-    if (!cd.res.ready) return message.reply(`${"```"}js\n＊🤖そのコマンドは一時間のクールダウンの後に使えます🚀\n残り${(cd.res.rem / 1000 / 60).toFixed(1)}分${"```"}`);
-    client.channels.cache.get('1098138385014607894').send(`${"<@&1097890550679613501>"}\nVCが開始されました！！！！みんな来て！\nhttps://discord.com/channels/1088080726991323226/1098138244186656798`)
-    cmdCD.addCoolDown(message.author.id, 3600000, "cmd-work");
 }
 }
 module.exports = Command;
