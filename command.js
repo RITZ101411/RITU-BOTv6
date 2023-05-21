@@ -1,7 +1,6 @@
 const fs = require("fs")
 const Keyv = require('keyv')
 const cmdCD = require('command-cooldown');
-const { measureMemory } = require("vm");
 
 const prefix = 'c!';
 
@@ -78,14 +77,6 @@ async withdraw(message) {
         );
     }
     moneys.set(message.author.id, money)
-}
-
-async ping(message,client) {
-    let cd = await cmdCD.checkCoolDown(message.author.id, "cmd-ping");
-    if (cd.res.spam) return;
-    if (!cd.res.ready) return message.reply(`${"```"}js\n🤖そのコマンドが使えるまであと ${(cd.res.rem / 1000).toFixed(1)}秒🚀${"```"}`);
-    message.reply(`${"```"}ポン！🏓${client.ws.ping}Ms${"```"}`);
-    cmdCD.addCoolDown(message.author.id, 5000, "cmd-ping");
 }
 
 async work(message) {
