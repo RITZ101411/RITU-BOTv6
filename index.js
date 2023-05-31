@@ -78,7 +78,7 @@ client.on('messageCreate', async (message) => {
 			commandclass.send(message);
 		}
 		//coinflip
-		if (command === `coinflip`) {
+		if (command === `coinflip` || command === `cf`) {
 			commandclass.coinflip(message);
 		}
 	}
