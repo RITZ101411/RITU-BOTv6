@@ -25,8 +25,8 @@ async balance(message) {
 	.setAuthor({ name: 'RITU-BOTv6'})
 	.setDescription('現在の所持金を表示します')
 	.addFields(
-		{ name: '手持ちのお金', value: money.cash.toString() },
-		{ name: '銀行のお金', value: money.bank.toString() , inline: true },
+		{ name: '手持ちのお金', value: `${money.cash}円` },
+		{ name: '銀行のお金', value: `${money.bank}+円` , inline: true },
 	)
 	.setTimestamp();
 
@@ -260,7 +260,7 @@ async coinflip(message) {
         const embedMessage = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Coinflip')
-        .setDescription(`YOU WIN!🤑\n${a * 2}円を手に入れました！💴`)
+        .setDescription(`表！YOU WIN!🤑\n${a * 2}円を手に入れました！💴`)
         .setTimestamp();
 
         message.reply({ embeds: [embedMessage] });
@@ -269,7 +269,7 @@ async coinflip(message) {
         const embedMessage = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Coinflip')
-        .setDescription(`YOU LOOSE...${"(´；ω；`)ｳｯ…"}\n${a}円を失いました💸`)
+        .setDescription(`裏！YOU LOOSE...${"(´；ω；`)ｳｯ…"}\n${a}円を失いました💸`)
         .setTimestamp();
 
         message.reply({ embeds: [embedMessage] });
