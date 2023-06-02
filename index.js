@@ -49,7 +49,7 @@ client.once('ready', () => {
 client.on('messageCreate', async (message) => {
 	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 10 };
 	var randomXp = Math.random() * ( 16 - 5) + 5;
-	level.xp += randomXp.toFixed(2)
+	level.xp += randomXp.toFixed(2) 
 	console.log(level.xp)
 	if (!message.content.startsWith(prefix)) return
 
