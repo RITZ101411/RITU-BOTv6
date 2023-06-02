@@ -10,11 +10,10 @@ const keyv = new Keyv('sqlite://db.sqlite');
 const moneys = new Keyv('sqlite://db.sqlite', { table: 'moneys' })
 moneys.on('error', err => console.error('Keyv connection error:', err))
 
-const levels = new Keyv('sqlite://db.sqlite', { table: 'levels' })
-moneys.on('error', err => console.error('Keyv connection error:', err))
-
 const userLevels = new Keyv('sqlite://db.sqlite')
 userLevels.on('error', err => console.error('Keyv connection error:', err))
+
+
 
 class Command {
 async balance(message) {
@@ -26,7 +25,7 @@ async balance(message) {
 	.setDescription('現在の所持金を表示します')
 	.addFields(
 		{ name: '手持ちのお金', value: `${money.cash}円` },
-		{ name: '銀行のお金', value: `${money.bank}+円` , inline: true },
+		{ name: '銀行のお金', value: `${money.bank}円` , inline: true },
 	)
 	.setTimestamp();
 

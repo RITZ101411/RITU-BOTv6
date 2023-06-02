@@ -47,10 +47,11 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
-	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 10 };
+	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 100 };
 	var randomXp = Math.random() * ( 16 - 5) + 5;
-	level.xp += randomXp.toFixed(2) 
+	level.xp += Math.floor(randomXp)
 	console.log(level.xp)
+	levels.set(message.author.id, level)
 	if (!message.content.startsWith(prefix)) return
 
 	const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
@@ -85,6 +86,10 @@ client.on('messageCreate', async (message) => {
 		//coinflip
 		if (command === `coinflip` || command === `cf`) {
 			commandclass.coinflip(message);
+		}
+		//level
+		if (command === `level`){
+			subcommandclass.level(message);
 		}
 	}
 )
