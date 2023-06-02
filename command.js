@@ -13,15 +13,12 @@ moneys.on('error', err => console.error('Keyv connection error:', err))
 const userLevels = new Keyv('sqlite://db.sqlite')
 userLevels.on('error', err => console.error('Keyv connection error:', err))
 
-
-
 class Command {
 async balance(message) {
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
     const embedMessage = new EmbedBuilder()
 	.setColor(0x0099FF)
 	.setTitle('Balance')
-	.setAuthor({ name: 'RITU-BOTv6'})
 	.setDescription('現在の所持金を表示します')
 	.addFields(
 		{ name: '手持ちのお金', value: `${money.cash}円` },
@@ -56,7 +53,6 @@ async deposit(message) {
         const embedMessage = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Deposit')
-            .setAuthor({ name: 'RITU-BOTv6'})
             .setDescription('入金しました')
             .addFields(
                 { name: '入金した金額', value:  `${a}円` },
@@ -87,7 +83,7 @@ async withdraw(message) {
         const embedMessage = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Withdraw')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription('銀行のお金が足りません')  
     .setTimestamp();
     message.reply({ embeds: [embedMessage] });
@@ -100,7 +96,7 @@ async withdraw(message) {
         const embedMessage = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Deposit')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription('出金しました')
         .addFields(
             { name: '出金したお金', value:  `${a}円` },
@@ -113,7 +109,7 @@ async withdraw(message) {
         const embedMessage = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Withdraw')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription('出金したい金額を書いてください(一円以上)\n＊コマンド : c!withdraw <出金したい金額>')  
             .setTimestamp();
                 message.reply({ embeds: [embedMessage] });
@@ -128,7 +124,7 @@ async work(message) {
         const embedMessage = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Work')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`🤖そのコマンドは一時間のクールダウンの後に使えます🚀\n残り${(cd.res.rem / 1000 / 60).toFixed(1)}分`)  
             .setTimestamp();
         message.reply({ embeds: [embedMessage] });
@@ -139,7 +135,7 @@ async work(message) {
     const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Work')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription(`地下労働して${randomwork}円を手に入れた！💸`)  
         .setTimestamp();
         message.reply({ embeds: [embedMessage2] });
@@ -155,7 +151,7 @@ async send(message) {
             const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`メンバーを一人指定してください`)  
             .setTimestamp();
             message.reply({ embeds: [embedMessage2] });
@@ -167,7 +163,7 @@ async send(message) {
             const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`相手に渡す金額を指定してください`)  
             .setTimestamp();
             message.reply({ embeds: [embedMessage2] });
@@ -177,7 +173,7 @@ async send(message) {
             const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`相手に渡す金額を指定してください`)  
             .setTimestamp();
             message.reply({ embeds: [embedMessage2] });
@@ -187,7 +183,7 @@ async send(message) {
             const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`所持金が足りません`)  
             .setTimestamp();
             message.reply({ embeds: [embedMessage2] });
@@ -199,7 +195,7 @@ async send(message) {
         const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
-            .setAuthor({ name: 'RITU-BOTv6'})
+
             .setDescription(`送金しました`)  
             .setTimestamp();
         message.reply({ embeds: [embedMessage2] });
@@ -215,7 +211,7 @@ async coinflip(message) {
         const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Coinflip')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription(`表か裏を選んでください\n＊コマンド : c!coinflip <BETしたい金額> <表なら1裏なら2>`)  
         .setTimestamp();
         message.reply({ embeds: [embedMessage2] });
@@ -225,7 +221,7 @@ async coinflip(message) {
         const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Coinflip')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription(`相手に渡す金額を指定してください`)  
         .setTimestamp();
         message.reply({ embeds: [embedMessage2] });
@@ -235,7 +231,7 @@ async coinflip(message) {
         const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Coinflip')
-        .setAuthor({ name: 'RITU-BOTv6'})
+
         .setDescription(`相手に渡す金額を指定してください`)  
         .setTimestamp();
         message.reply({ embeds: [embedMessage2] });

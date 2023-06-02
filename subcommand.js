@@ -19,11 +19,10 @@ async level(message) {
     const embedMessage = new EmbedBuilder()
 	.setColor(0x0099FF)
 	.setTitle('Level')
-	.setAuthor({ name: 'RITU-BOTv6'})
 	.setDescription('現在のレベルを表示します')
 	.addFields(
 		{ name: 'Level', value: `${level.level}Lv` },
-		{ name: '銀行のお金', value: `${level.xp}Xp 次のレベルまで ${requiredExperience}` },
+		{ name: 'Xp', value: `${level.xp}Xp 次のレベルまで ${requiredExperience}Xp` },
 	)
 	.setTimestamp();
     message.reply({ embeds: [embedMessage] });

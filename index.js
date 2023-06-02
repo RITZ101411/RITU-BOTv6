@@ -2,7 +2,7 @@
 const subcommand = require("./subcommand.js")
 const commandclass = new command();
 const subcommandclass = new subcommand(); 
-const { Client, GatewayIntentBits, Partials } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, EmbedBuilder } = require('discord.js');
 require('dotenv').config();
 const Keyv = require('keyv')
 const { token } = process.env;
@@ -47,11 +47,29 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
+	if (message.author.id == client.user.id || message.author.bot){
+		return;
+	  }
 	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 100 };
 	var randomXp = Math.random() * ( 16 - 5) + 5;
 	level.xp += Math.floor(randomXp)
 	console.log(level.xp)
 	levels.set(message.author.id, level)
+	if (level.xp >= level.max){
+		level.max += 150
+		level.xp = 0
+		level.level += 1
+		const embedMessage = new EmbedBuilder()
+		.setColor(0x0099FF)
+		.setTitle('LevelUp!🎉')
+		.addFields(
+			{ name: '現在のレベル', value: `${level.level}Lv` },
+			{ name: '次のレベルまで', value: `${level.max}Xp` },
+		)
+		.setTimestamp();
+		message.reply({ embeds: [embedMessage] });
+	}
+
 	if (!message.content.startsWith(prefix)) return
 
 	const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
