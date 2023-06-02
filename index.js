@@ -4,9 +4,12 @@ const commandclass = new command();
 const subcommandclass = new subcommand(); 
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 require('dotenv').config();
+const Keyv = require('keyv')
 const { token } = process.env;
 
 const prefix = 'c!';
+const levels = new Keyv('sqlite://db.sqlite', { table: 'levels' })
+levels.on('error', err => console.error('Keyv connection error:', err))
 
 const client = new Client({
 	intents: [
@@ -44,9 +47,11 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
-
+	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 10 };
+	var randomXp = Math.random() * ( 16 - 5) + 5;
+	level.xp += randomXp.toFixed(2)
+	console.log(level.xp)
 	if (!message.content.startsWith(prefix)) return
-
 
 	const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
 
