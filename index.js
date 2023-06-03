@@ -106,7 +106,7 @@ client.on('messageCreate', async (message) => {
 			commandclass.coinflip(message);
 		}
 		//level
-		if (command === `level`){
+		if (command === `level` || command === `rank`){
 			subcommandclass.level(message);
 		}
 	}
