@@ -21,7 +21,7 @@ async level(message) {
 	.setTitle('Level')
 	.setDescription('現在のレベルを表示します')
 	.addFields(
-		{ name: 'Level', value: `${level.level}Lv` },
+		{ name: 'Lv', value: `${level.level}Lv` },
 		{ name: 'Xp', value: `${level.xp}Xp 次のレベルまで ${requiredExperience}Xp` },
 	)
 	.setTimestamp();
