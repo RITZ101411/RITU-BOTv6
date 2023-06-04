@@ -39,7 +39,6 @@ async level(message) {
 }
 async gpt(message) {
     let sendcontent = message.content.substring(6)
-    console.log(sendcontent)
     let completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [{role: "user", content: sendcontent}],
@@ -49,9 +48,9 @@ async gpt(message) {
 async gptgreeting(member){
     let completion = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: sendcontent}],
+        messages: [{role: "user", content: `「${member.displayName}」という名前について一言と「${member.displayName}」さんへの挨拶を言ってください`}],
       });
-    ({content: completion.data.choices[0].message.content});
+    member.guild.channels.cache.get(`1114068389497933834`).send({content: `# ${member.user.tag}さんよろしく！\n`+completion.data.choices[0].message.content});
 }
 }
 
