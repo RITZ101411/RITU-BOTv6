@@ -1,6 +1,15 @@
 const cmdCD = require('command-cooldown');
 const { EmbedBuilder } = require('discord.js');
 const Keyv = require('keyv')
+require('dotenv').config();
+const { Configuration, OpenAIApi } = require("openai");
+
+const prefix = 'c!';
+
+const configuration = new Configuration({
+	apiKey: process.env.GPT_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 const levels = new Keyv('sqlite://db.sqlite', { table: 'levels' })
 levels.on('error', err => console.error('Keyv connection error:', err))
@@ -27,6 +36,21 @@ async level(message) {
 	.setTimestamp();
     message.reply({ embeds: [embedMessage] });
     levels.set(message.author.id, level)
+}
+async gpt(message) {
+    let sendcontent = message.content.substring(6)
+    let completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: sendcontent}],
+      });
+    message.reply({content: completion.data.choices[0].message.content});
+}
+async gptgreeting(member){
+    let completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: `「${member.displayName}」という名前について一言と「${member.displayName}」さんへの挨拶を言ってください`}],
+      });
+    member.guild.channels.cache.get(`1114068389497933834`).send({content: `# ${member.user.tag}さんよろしく！\n`+completion.data.choices[0].message.content});
 }
 }
 

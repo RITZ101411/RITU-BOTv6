@@ -46,29 +46,45 @@ client.once('ready', () => {
 	console.log('起動完了');
 });
 
+client.on('guildMemberAdd', async member => {
+	 console.log(member.displayName)
+	 subcommandclass.gptgreeting(member);
+	})
+
+	client.on('messageCreate', async (message) => {
+		if (message.author.id == client.user.id || message.author.bot){
+			return;
+		  }
+		  if (message.channel.id === '1114068389497933834') {
+			const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 100 };
+			var randomXp = Math.random() * ( 16 - 5) + 5;
+			level.xp += Math.floor(randomXp)
+			console.log(level.xp)
+			levels.set(message.author.id, level)
+			if (level.xp >= level.max){
+				level.max += 150
+				level.xp = 0
+				level.level += 1
+				const embedMessage = new EmbedBuilder()
+				.setColor(0x0099FF)
+				.setTitle('LevelUp!🎉')
+				.addFields(
+					{ name: '現在のレベル', value: `${level.level}Lv` },
+					{ name: '次のレベルまで', value: `${level.max}Xp` },
+				)
+				.setTimestamp();
+				message.reply({ embeds: [embedMessage] });
+			}
+		  }
+		  else return;
+	}
+)
+	
+
 client.on('messageCreate', async (message) => {
 	if (message.author.id == client.user.id || message.author.bot){
 		return;
 	  }
-	const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 100 };
-	var randomXp = Math.random() * ( 16 - 5) + 5;
-	level.xp += Math.floor(randomXp)
-	console.log(level.xp)
-	levels.set(message.author.id, level)
-	if (level.xp >= level.max){
-		level.max += 150
-		level.xp = 0
-		level.level += 1
-		const embedMessage = new EmbedBuilder()
-		.setColor(0x0099FF)
-		.setTitle('LevelUp!🎉')
-		.addFields(
-			{ name: '現在のレベル', value: `${level.level}Lv` },
-			{ name: '次のレベルまで', value: `${level.max}Xp` },
-		)
-		.setTimestamp();
-		message.reply({ embeds: [embedMessage] });
-	}
 
 	if (!message.content.startsWith(prefix)) return
 
@@ -108,6 +124,10 @@ client.on('messageCreate', async (message) => {
 		//level
 		if (command === `level` || command === `rank`){
 			subcommandclass.level(message);
+		}
+		//gpt
+		if (command === `gpt`){
+			subcommandclass.gpt(message);
 		}
 	}
 )
