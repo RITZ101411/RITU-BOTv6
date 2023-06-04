@@ -46,6 +46,11 @@ client.once('ready', () => {
 	console.log('起動完了');
 });
 
+client.on('guildMemberAdd', async member => {
+	 console.log(member.displayName)
+	 subcommandclass.gptgreeting(member);
+	})
+
 client.on('messageCreate', async (message) => {
 	if (message.author.id == client.user.id || message.author.bot){
 		return;
@@ -108,6 +113,10 @@ client.on('messageCreate', async (message) => {
 		//level
 		if (command === `level`){
 			subcommandclass.level(message);
+		}
+		//gpt
+		if (command === `gpt`){
+			subcommandclass.gpt(message);
 		}
 	}
 )
