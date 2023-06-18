@@ -1,4 +1,4 @@
-﻿const command = require("./command.js")
+const command = require("./command.js")
 const subcommand = require("./subcommand.js")
 const commandclass = new command();
 const subcommandclass = new subcommand(); 
@@ -124,10 +124,6 @@ client.on('messageCreate', async (message) => {
 		//level
 		if (command === `level` || command === `rank`){
 			subcommandclass.level(message);
-		}
-		//gpt
-		if (command === `gpt`){
-			subcommandclass.gpt(message);
 		}
 	}
 )
