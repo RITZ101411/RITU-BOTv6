@@ -92,12 +92,16 @@ async vcleave(message){
     message.channel.send({ embeds: [embedMessage] });
 }
 async gpt(message){
-    let completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: message.content.substr( 5 )}],
-      });
+    let completion = await textGenerate(message.content.substr( 5 ),"user")
     message.reply(completion.data.choices[0].message.content)
 }
+}
+async function textGenerate(input,targetRole){
+    let completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: targetRole, content: input}],
+      });
+    return completion;
 }
 
 
