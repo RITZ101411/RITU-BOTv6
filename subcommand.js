@@ -95,12 +95,19 @@ async gpt(message){
     let completion = await textGenerate(message.content.substr( 5 ),"user")
     message.reply(completion.data.choices[0].message.content)
 }
+async voice(message){
+    let completion = await textGenerate(message.content.substr( 5 ),"語尾に'★'をつけてください")
+    message.reply(completion.data.choices[0].message.content)
 }
-async function textGenerate(input,targetRole){
+}
+async function textGenerate(input,systemMsg){
     let completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{role: targetRole, content: input}],
-      });
+        model : "gpt-3.5-turbo",
+        messages : [
+            {"role": "system", "content": systemMsg},
+            {"role": "user", "content": input}
+        ]                    
+    });
     return completion;
 }
 

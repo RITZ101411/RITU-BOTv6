@@ -138,6 +138,10 @@ client.on('messageCreate', async (message,member) => {
 		if (command === `gpt`){
 			subcommandclass.gpt(message,member);
 		}
+		//voice
+		if (command === `voice`){
+			subcommandclass.voice(message);
+		}
 	}
 )
 
