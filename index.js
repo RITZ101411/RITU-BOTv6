@@ -134,6 +134,10 @@ client.on('messageCreate', async (message,member) => {
 		if (command === `leave`){
 			subcommandclass.vcleave(message);
 		}
+		//chatgpt
+		if (command === `gpt`){
+			subcommandclass.gpt(message,member);
+		}
 	}
 )
 
