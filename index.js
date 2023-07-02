@@ -1,8 +1,8 @@
-const command = require("./command.js")
+﻿const command = require("./command.js")
 const subcommand = require("./subcommand.js")
 const commandclass = new command();
 const subcommandclass = new subcommand(); 
-const { Client, GatewayIntentBits, Partials, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, EmbedBuilder, MessageActivityType } = require('discord.js');
 require('dotenv').config();
 const Keyv = require('keyv')
 const { token } = process.env;
@@ -10,6 +10,8 @@ const { token } = process.env;
 const prefix = 'c!';
 const levels = new Keyv('sqlite://db.sqlite', { table: 'levels' })
 levels.on('error', err => console.error('Keyv connection error:', err))
+
+
 
 const client = new Client({
 	intents: [
@@ -79,9 +81,8 @@ client.on('guildMemberAdd', async member => {
 		  else return;
 	}
 )
-	
 
-client.on('messageCreate', async (message) => {
+client.on('messageCreate', async (message,member) => {
 	if (message.author.id == client.user.id || message.author.bot){
 		return;
 	  }
@@ -124,6 +125,14 @@ client.on('messageCreate', async (message) => {
 		//level
 		if (command === `level` || command === `rank`){
 			subcommandclass.level(message);
+		}
+		//vcjoin
+		if (command === `join`){
+			subcommandclass.vcjoin(message);
+		}
+		//vcjoin
+		if (command === `leave`){
+			subcommandclass.vcleave(message);
 		}
 	}
 )

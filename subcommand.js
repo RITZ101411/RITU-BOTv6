@@ -3,8 +3,12 @@ const { EmbedBuilder } = require('discord.js');
 const Keyv = require('keyv')
 require('dotenv').config();
 const { Configuration, OpenAIApi } = require("openai");
+const { joinVoiceChannel, getVoiceConnection } = require('@discordjs/voice');
+const { config } = require('dotenv');
 
 const prefix = 'c!';
+
+const GUILD_ID = process.env.GUILD_ID
 
 const configuration = new Configuration({
 	apiKey: process.env.GPT_KEY,
@@ -52,6 +56,50 @@ async gptgreeting(member){
       });
     member.guild.channels.cache.get(`1114068389497933834`).send({content: `# ${member.user.tag}さんよろしく！\n`+completion.data.choices[0].message.content});
 }
+async vcjoin(message){
+    if(message.member.voice.channelId == null){
+        const embedMessage = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('JOIN')
+        .setDescription('VCに参加してください')
+        .setTimestamp();
+        message.channel.send({ embeds: [embedMessage] });
+    }
+    const connection = joinVoiceChannel({
+        selfMute: false,
+        channelId: message.member.voice.channelId,
+        guildId: GUILD_ID,
+        adapterCreator: message.member.voice.guild.voiceAdapterCreator,
+})
+    if(message.member.voice.channelId !== null){
+        const embedMessage = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('JOIN')
+        .setDescription('VCに参加しました')
+        .setTimestamp();
+        message.channel.send({ embeds: [embedMessage] });
+    }
 }
+async vcleave(message){
+    const connection = getVoiceConnection(message.guild.id);
+    if(connection == undefined) return;
+    connection.destroy();
+    const embedMessage = new EmbedBuilder()
+    .setColor(0x0099FF)
+    .setTitle('JOIN')
+    .setDescription('VCから退出しました')
+    .setTimestamp();
+    message.channel.send({ embeds: [embedMessage] });
+}
+async gpt(message){
+    let completion = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{role: "user", content: message.content.substr( 5 )}],
+      });
+    message.reply(completion.data.choices[0].message.content)
+}
+}
+
+
 
 module.exports = SubCommand;
