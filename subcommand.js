@@ -92,12 +92,23 @@ async vcleave(message){
     message.channel.send({ embeds: [embedMessage] });
 }
 async gpt(message){
-    let completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{role: "user", content: message.content.substr( 5 )}],
-      });
+    let completion = await textGenerate(message.content.substr( 5 ),"user")
     message.reply(completion.data.choices[0].message.content)
 }
+async voice(message){
+    let completion = await textGenerate(message.content.substr( 5 ),"語尾に'★'をつけてください")
+    message.reply(completion.data.choices[0].message.content)
+}
+}
+async function textGenerate(input,systemMsg){
+    let completion = await openai.createChatCompletion({
+        model : "gpt-3.5-turbo",
+        messages : [
+            {"role": "system", "content": systemMsg},
+            {"role": "user", "content": input}
+        ]                    
+    });
+    return completion;
 }
 
 
