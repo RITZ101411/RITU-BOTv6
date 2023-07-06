@@ -142,6 +142,10 @@ client.on('messageCreate', async (message,member) => {
 		if (command === `voice`){
 			subcommandclass.voice(message);
 		}
+		//slot
+		if (command === `slot`){
+			commandclass.slot(message);
+		}
 	}
 )
 

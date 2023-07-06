@@ -271,5 +271,22 @@ async coinflip(message) {
     }
     moneys.set(message.author.id, money)
 }
+
+async slot(message){
+    const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
+    const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
+    const [a] = args.map(str => Number(str))
+    if (Number.isNaN(a) || (a <= 0) || money.cash < a) {
+        const embedMessage2 = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Slot')
+        .setDescription(`BETする金額を指定してください(1円以上、半角数字)`)  
+        .setTimestamp();
+        message.reply({ embeds: [embedMessage2] });
+        return
+    }
+    console.log(a)
+    moneys.set(message.author.id, money)
+}
 }
 module.exports = Command;
