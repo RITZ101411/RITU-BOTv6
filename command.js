@@ -280,12 +280,13 @@ async slot(message){
         const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Slot')
-        .setDescription(`BETする金額を指定してください(1円以上、半角数字)`)  
+        .setDescription(``)  
         .setTimestamp();
         message.reply({ embeds: [embedMessage2] });
         return
     }
     console.log(a)
+
     moneys.set(message.author.id, money)
 }
 }
