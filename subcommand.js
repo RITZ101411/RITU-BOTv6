@@ -3,7 +3,7 @@ const { EmbedBuilder } = require('discord.js');
 const Keyv = require('keyv')
 require('dotenv').config();
 const { Configuration, OpenAIApi } = require("openai");
-const { joinVoiceChannel, getVoiceConnection } = require('@discordjs/voice');
+const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource } = require('@discordjs/voice');
 const { config } = require('dotenv');
 const { default: axios } = require("axios");
 const fs = require("fs");
@@ -13,6 +13,8 @@ const fs = require("fs");
 const rpc = axios.create({ baseURL: "http://127.0.0.1:50021", proxy: false });
 
 const prefix = 'c!';
+
+const player = createAudioPlayer();
 
 const GUILD_ID = process.env.GUILD_ID
 
@@ -88,7 +90,10 @@ class SubCommand {
             console.log(completion)
             let generateText = completion.data.choices[0].message.content
             console.log(generateText)
-            await this.genAudio(generateText,"test.wav")
+            await this.genAudio(generateText,"test.mp3")
+            const resource = createAudioResource('./test.mp3');
+            player.stop()
+            player.play(resource)
         }
     }
     async vcleave(message) {
