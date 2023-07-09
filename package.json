@@ -11,6 +11,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.9.0",
     "@discordjs/voice": "^0.16.0",
+    "axios": "^1.4.0",
     "command-cooldown": "^1.0.0",
     "dotenv": "^16.0.3"
   }
