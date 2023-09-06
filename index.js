@@ -11,7 +11,7 @@ const prefix = 'c!';
 const levels = new Keyv('sqlite://db.sqlite', { table: 'levels' })
 levels.on('error', err => console.error('Keyv connection error:', err))
 
-
+textReadingChannel = null;
 
 const client = new Client({
 	intents: [
@@ -36,7 +36,6 @@ const client = new Client({
 	partials: [
 		Partials.User,
 		Partials.Channel,
-		Partials.GuildMember,
 		Partials.Message,
 		Partials.Reaction,
 		Partials.GuildScheduledEvent,
@@ -50,12 +49,23 @@ client.once('ready', () => {
 
 client.on('guildMemberAdd', async member => {
 	 console.log(member.displayName)
-	 subcommandclass.gptgreeting(member);
+	 //subcommandclass.gptgreeting(member);
 	})
 
 	client.on('messageCreate', async (message) => {
 		if (message.author.id == client.user.id || message.author.bot){
 			return;
+		  }
+		  if (message.channel.id == message.member.voice.channelId || 
+			(message.channel.id == textReadingChannel && textReadingChannel !== null)){
+				if (message.content.startsWith(prefix)){
+					return
+				}
+				if (message.content == "消えてもらおうかッ！"){
+					await subcommandclass.voicePlay("cc.mp3")
+					return
+				}
+				subcommandclass.chatreading(message)
 		  }
 		  if (message.channel.id === '1114068389497933834') {
 			const level = (await levels.get(message.author.id)) || { level: 1, xp: 0, max: 100 };
@@ -79,10 +89,10 @@ client.on('guildMemberAdd', async member => {
 			}
 		  }
 		  else return;
-	}
+		}
 )
 
-client.on('messageCreate', async (message,member) => {
+client.on('messageCreate', async (/**メンバーが送信したMessage*/message) => {
 	if (message.author.id == client.user.id || message.author.bot){
 		return;
 	  }
@@ -128,12 +138,13 @@ client.on('messageCreate', async (message,member) => {
 		}
 		//vcjoin
 		if (command === `join`){
-			subcommandclass.vcjoin(message);
+			textReadingChannel = await subcommandclass.vcjoin(message);
 		}
 		//vcjoin
 		if (command === `leave`){
 			subcommandclass.vcleave(message);
 		}
+<<<<<<< Updated upstream
 		//chatgpt
 		if (command === `gpt`){
 			subcommandclass.gpt(message,member);
@@ -141,6 +152,31 @@ client.on('messageCreate', async (message,member) => {
 		//voice
 		if (command === `voice`){
 			subcommandclass.voice(message);
+=======
+		//voice
+		if (command === `vc`){
+			subcommandclass.vctest(message);
+		}
+		//speakerset
+		if (command === `vcset`){
+			subcommandclass.speakerset(message);
+		}
+		//gptask
+		if (command === `gpt`){
+			subcommandclass.gpt(message);
+		}
+		//shortWork
+		if (command === `short-work` || command === `swork`){
+			commandclass.shortWork(message);
+		} 
+		//slot
+		if (command === `slot`){
+			commandclass.slot(message);
+		}
+		//fishing
+		if (command === `fishing`){
+			commandclass.fishing(message);
+>>>>>>> Stashed changes
 		}
 	}
 )

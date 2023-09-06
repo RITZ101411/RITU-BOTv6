@@ -14,22 +14,46 @@ const userLevels = new Keyv('sqlite://db.sqlite')
 userLevels.on('error', err => console.error('Keyv connection error:', err))
 
 class Command {
-async balance(message) {
-    const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
-    const embedMessage = new EmbedBuilder()
-	.setColor(0x0099FF)
-	.setTitle('Balance')
-	.setDescription('現在の所持金を表示します')
-	.addFields(
-		{ name: '手持ちのお金', value: `${money.cash}円` },
-		{ name: '銀行のお金', value: `${money.bank}円` , inline: true },
-	)
-	.setTimestamp();
-
-    message.reply({ embeds: [embedMessage] });
-    moneys.set(message.author.id, money)
+/**
+ * 現在の所持金を表示します
+ * @param {Message<boolean>} message 
+ */
+async balance(message) {    
+    if(message.mentions.members.size == 0){
+        const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
+        const embedMessage = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Balance')
+        .setDescription('現在の所持金を表示します')
+        .addFields(
+            { name: '手持ちのお金', value: `${money.cash}円` },
+            { name: '銀行のお金', value: `${money.bank}円` , inline: true },
+        )
+        .setTimestamp();
+        message.reply({ embeds: [embedMessage] });
+    }
+    if (message.mentions.members.size == 1) {
+    const target = await message.mentions.members.first()
+    const targetDisplayName = message.mentions.members.first().user.username;
+    const targetmoney = (await moneys.get(target.id)) || { cash: 5000, bank: 0 };
+    console.log(message.mentions.members)
+        const embedMessage = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Balance')
+        .setDescription(`${target}の所持金を表示します`)
+        .addFields(
+            { name: `${targetDisplayName}のお金`, value: `${targetmoney.cash}円` },
+            { name: `${targetDisplayName}銀行のお金`, value: `${targetmoney.bank}円` , inline: true },
+        )
+        .setTimestamp();
+        message.reply({ embeds: [embedMessage] });
+    }   
 }
-
+/**
+ * 銀行にお金を預ける
+ * @param {Message<boolean>} message 
+ * @returns NaN
+ */
 async deposit(message) {
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
@@ -73,7 +97,11 @@ async deposit(message) {
     }
     moneys.set(message.author.id, money)
 }
-
+/**
+ * 銀行からお金を引き出す
+ * @param {Message<boolean>} message 
+ * @returns NaN
+ */
 async withdraw(message) {
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
@@ -116,7 +144,11 @@ async withdraw(message) {
     }
     moneys.set(message.author.id, money)
 }
-
+/**
+ * お金を稼ぐ
+ * @param {Message<boolean>} message 
+ * @returns 
+ */
 async work(message) {
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
     let cd = await cmdCD.checkCoolDown(message.author.id, "cmd-work");
@@ -130,7 +162,7 @@ async work(message) {
         message.reply({ embeds: [embedMessage] });
         return
     } 
-    var randomwork = 1000 + Math.floor(Math.random() * 5000);
+    var randomwork = 3000 + Math.floor(Math.random() * 7000);
     money.cash += randomwork;
     const embedMessage2 = new EmbedBuilder()
         .setColor(0x0099FF)
@@ -142,7 +174,36 @@ async work(message) {
     cmdCD.addCoolDown(message.author.id, 3600000, "cmd-work");
     moneys.set(message.author.id, money)
 }
+async shortWork(message) {
+    const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
+    let scd = await cmdCD.checkCoolDown(message.author.id, "scmd-work");
+    if (!scd.res.ready) {
+        const embedMessage = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle('ShortWork')
 
+            .setDescription(`🤖そのコマンドは一時間のクールダウンの後に使えます🚀\n残り${(scd.res.rem / 1000 / 60).toFixed(1)}分`)  
+            .setTimestamp();
+        message.reply({ embeds: [embedMessage] });
+        return
+    } 
+    var randomwork = 100 + Math.floor(Math.random() * 1000);
+    money.cash += randomwork;
+    const embedMessage2 = new EmbedBuilder()
+        .setColor(0x0099FF)
+        .setTitle('Work')
+
+        .setDescription(`自販機の下から${randomwork}円を手に入れた！💸`)  
+        .setTimestamp();
+        message.reply({ embeds: [embedMessage2] });
+    cmdCD.addCoolDown(message.author.id, 300000, "scmd-work");
+    moneys.set(message.author.id, money)
+}
+/**
+ * 相手に指定した金額を渡す
+ * @param {Message<boolean>} message 
+ * @returns 
+ */
 async send(message) {
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
@@ -159,7 +220,7 @@ async send(message) {
         } 
     const target = await message.mentions.members.first()
     const targetmoney = (await moneys.get(target.id)) || { cash: 5000, bank: 0 };
-        if (Number.isNaN(a)) {
+        if (Number.isNaN(a)) { //相手に渡す金額が数字であるか
             const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
@@ -189,9 +250,18 @@ async send(message) {
             message.reply({ embeds: [embedMessage2] });
             return
         } 
+        if (target == message.author.id){
+            const embedMessage2 = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle('Send')
+
+            .setDescription(`自分以外の人にしか送金できません`)  
+            .setTimestamp();
+            message.reply({ embeds: [embedMessage2] });
+            return
+        }
         money.cash -= a;
         targetmoney.cash += a;
-
         const embedMessage2 = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Send')
@@ -202,7 +272,11 @@ async send(message) {
     moneys.set(message.author.id, money);
     moneys.set(target.id, targetmoney);
 }
-
+/**
+ * coinflipでお金を稼ぐ
+ * @param {Message<boolean>} message 
+ * @returns 
+ */
 async coinflip(message) {
     const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
     const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
@@ -246,7 +320,6 @@ async coinflip(message) {
 
         message.reply({ embeds: [embedMessage] });
     return;
-        return
     }
     money.cash -= a;
     const side = Math.floor(Math.random() * 2 + 1);
@@ -269,6 +342,12 @@ async coinflip(message) {
 
         message.reply({ embeds: [embedMessage] });
     }
+    moneys.set(message.author.id, money)
+}
+async slot(message) {
+    const [command, ...args] = message.content.slice(prefix.length).split(/\s+/)
+    const money = (await moneys.get(message.author.id)) || { cash: 5000, bank: 0 };
+
     moneys.set(message.author.id, money)
 }
 }
